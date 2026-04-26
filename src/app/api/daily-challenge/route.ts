@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 import { getPersonalization } from '@/lib/personalization'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
 const db = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 export async function GET(req: NextRequest) {

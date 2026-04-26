@@ -3,7 +3,7 @@ import OpenAI from 'openai'
 import { createClient } from '@supabase/supabase-js'
 import { getUserId } from '@/lib/auth'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
 const db = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 // POST — generate WhatsApp outreach scripts for specific scenarios

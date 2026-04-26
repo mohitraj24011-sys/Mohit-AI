@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth'
 import { checkLimit, incrementUsage, trackEvent } from '@/lib/plans'
 import { getPersonalization, buildPersonalizedSystemPrompt } from '@/lib/personalization'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
 
 const AGENTS: Record<string, string> = {
   'Networking Agent': 'LinkedIn networking expert for Indian IT. Generate: (1) connection request <300 chars, (2) follow-up for 1 week later, (3) 3 talking points. Return JSON: {"connectionRequest":"...","followUp":"...","talkingPoints":["..."]}',

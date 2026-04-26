@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
 import { trackEvent } from '@/lib/plans'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
 
 const db = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

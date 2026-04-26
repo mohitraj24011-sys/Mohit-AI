@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth'
 import { PROSPECT_SOURCES, LeadType } from '@/lib/marketingEngine'
 import { trackEvent } from '@/lib/plans'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
 
 export async function POST(req: NextRequest) {
   try {
