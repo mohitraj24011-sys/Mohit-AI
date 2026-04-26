@@ -13,7 +13,9 @@ const nextConfig = {
       { protocol: 'https', hostname: '**' },
     ],
   },
-  serverExternalPackages: ['openai'],
+  experimental: {
+    serverExternalPackages: ['openai'],
+  },
 }
 
 export default nextConfig
