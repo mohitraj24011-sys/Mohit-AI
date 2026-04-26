@@ -4,7 +4,9 @@ import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Zap, ArrowRight } from 'lucide-react'
 
-export default function Auth() {
+import { Suspense } from 'react'
+
+function AuthContent() {
   const router     = useRouter()
   const params     = useSearchParams()
   const [email, setEmail]       = useState('')
@@ -85,5 +87,13 @@ export default function Auth() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function Auth() {
+  return (
+    <Suspense fallback={<div style={{ color:'white', textAlign:'center', padding:50 }}>Loading...</div>}>
+      <AuthContent />
+    </Suspense>
   )
 }

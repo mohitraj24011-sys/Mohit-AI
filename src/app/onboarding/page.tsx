@@ -7,7 +7,9 @@ import { ArrowRight, Zap } from 'lucide-react'
 const ROLE_TIERS = ['fresher','junior','mid','senior','staff','manager','director','vp','c_suite']
 const PRESET_ROLES = ['Software Engineer','Backend Engineer','Frontend Engineer','Full Stack Engineer','Data Engineer','ML Engineer','DevOps Engineer','Product Manager','Business Analyst','Data Analyst','UX Designer','Engineering Manager','Director of Engineering']
 
-export default function Onboarding() {
+import { Suspense } from 'react'
+
+function OnboardingContent() {
   const router = useRouter()
   const params = useSearchParams()
   const refCode = params.get('ref') || ''
@@ -179,5 +181,13 @@ export default function Onboarding() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function Onboarding() {
+  return (
+    <Suspense fallback={<div style={{ color:'white', textAlign:'center', padding:50 }}>Loading...</div>}>
+      <OnboardingContent />
+    </Suspense>
   )
 }
