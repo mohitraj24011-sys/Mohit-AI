@@ -38,7 +38,10 @@ function CompanyContent() {
   const research = async (company: string, id: string) => {
     setResearching(id)
     const res = await authFetch('/api/company-intel', { method:'POST', body: JSON.stringify({ action:'research', company, skills:form.skills.split(',').map(s=>s.trim()), targetRole:form.targetRole }) })
-    if (res?.ok) setResult(prev => ({...prev, [id]: await res.json()}))
+    if (res?.ok) {
+      const data = await res.json()
+      setResult(prev => ({...prev, [id]: data}))
+    }
     setResearching(null)
   }
 
