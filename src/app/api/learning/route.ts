@@ -5,7 +5,7 @@ import { checkLimit, incrementUsage, trackEvent } from '@/lib/plans'
 import { getPersonalization, buildPersonalizedSystemPrompt } from '@/lib/personalization'
 import { LEARNING_RESOURCES, HANDS_ON_PROJECTS } from '@/lib/learning-resources'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const body = await req.json()
     const mem = await getPersonalization(userId)
     const personalCtx = buildPersonalizedSystemPrompt(mem)

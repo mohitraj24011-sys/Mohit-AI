@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth'
 import { checkLimit, incrementUsage, trackEvent } from '@/lib/plans'
 import { getPersonalization, buildPersonalizedSystemPrompt } from '@/lib/personalization'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
     const { allowed, remaining, plan } = await checkLimit(userId, 'interview_prep')
     if (!allowed) return NextResponse.json({ error: 'Daily limit reached', upgradeUrl: '/pricing' }, { status: 429 })
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const { action, company, role, tier, skills, answer, question } = await req.json()
     const mem = await getPersonalization(userId)
     const ctx = buildPersonalizedSystemPrompt(mem)

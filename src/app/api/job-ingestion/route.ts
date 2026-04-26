@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
 import { getPlatformsForTier } from '@/lib/platforms'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 
 const db = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
     const userId = await getUserId(req)
     if (!userId) return NextResponse.json({ error: 'Sign in required' }, { status: 401 })
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const { skills, targetRole, tier, location, salaryMin, includeRemote } = await req.json()
     const platforms = getPlatformsForTier(tier || 'mid')
 

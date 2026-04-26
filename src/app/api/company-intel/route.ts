@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth'
 import { checkLimit, incrementUsage } from '@/lib/plans'
 import { createClient } from '@supabase/supabase-js'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 const db = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 export async function GET(req: NextRequest) {
@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ company: data })
     }
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     if (action === 'research') {
       const { allowed } = await checkLimit(userId, 'market_trends')
       if (!allowed) return NextResponse.json({ error: 'Limit reached', upgradeUrl: '/pricing' }, { status: 429 })

@@ -4,13 +4,14 @@ import { getUserId } from '@/lib/auth'
 import { PROSPECT_SOURCES, LeadType } from '@/lib/marketingEngine'
 import { trackEvent } from '@/lib/plans'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 
 export async function POST(req: NextRequest) {
   try {
     const userId = await getUserId(req)
     if (!userId) return NextResponse.json({ error: 'Sign in required' }, { status: 401 })
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const { leadType, filters } = await req.json()
     const sources = PROSPECT_SOURCES[leadType as LeadType]
     if (!sources) return NextResponse.json({ error: 'Unknown lead type' }, { status: 400 })

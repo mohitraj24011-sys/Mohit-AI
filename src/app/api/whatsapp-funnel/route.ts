@@ -3,7 +3,7 @@ import OpenAI from 'openai'
 import { createClient } from '@supabase/supabase-js'
 import { getUserId } from '@/lib/auth'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 const db = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 // POST — generate WhatsApp outreach scripts for specific scenarios
@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
     if (!userId) return NextResponse.json({ error: 'Sign in required' }, { status: 401 })
     const { action, target, context } = await req.json()
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     if (action === 'generate_scripts') {
-      // Generate WhatsApp messages for all 3 stages of the funnel
       const completion = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [

@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { getUserId } from '@/lib/auth'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 
 export async function POST(req: NextRequest) {
   try {
     const userId = await getUserId(req)
     if (!userId) return NextResponse.json({ error: 'Sign in required' }, { status: 401 })
 
-    const { type, targetAudience, platform, tone } = await req.json()
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+    const { type, company, role, context } = await req.json()
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',

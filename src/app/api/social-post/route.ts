@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
 import { trackEvent } from '@/lib/plans'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 const db = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 const TRIGGER_LABELS: Record<string, string> = {
@@ -13,7 +13,7 @@ const TRIGGER_LABELS: Record<string, string> = {
   weekly_update: '📊 Weekly Update', streak_milestone: '🔥 Streak Milestone',
 }
 
-async function generatePost(triggerType: string, context: Record<string, unknown>, userProfile: Record<string, unknown>) {
+async function generatePost(openai: OpenAI, triggerType: string, context: Record<string, unknown>, userProfile: Record<string, unknown>) {
   const role = (userProfile.target_roles as string[])?.[0] || (userProfile.current_role as string) || 'Software Engineer'
   const skills = ((userProfile.skills as string[]) || []).slice(0, 5).join(', ')
 
@@ -144,9 +144,10 @@ export async function POST(req: NextRequest) {
 
     // ── Generate post content ───────────────────────────────────────────────
     if (action === 'generate') {
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
       const { triggerType, context } = body
       const { data: profile } = await db().from('profiles').select('target_roles, current_role, skills').eq('id', userId).single()
-      const post = await generatePost(triggerType, context || {}, profile || {})
+      const post = await generatePost(openai, triggerType, context || {}, profile || {})
       return NextResponse.json({ post, triggerType, label: TRIGGER_LABELS[triggerType] })
     }
 

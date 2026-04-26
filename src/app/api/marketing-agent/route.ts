@@ -8,7 +8,7 @@ import {
   WEEKLY_OUTREACH_PLAN, CHANNEL_PRIORITY, LeadType
 } from '@/lib/marketingEngine'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 const db = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 // POST /api/marketing-agent
@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
     const userId = await getUserId(req)
     if (!userId) return NextResponse.json({ error: 'Sign in required' }, { status: 401 })
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const body = await req.json()
     const { action } = body
 

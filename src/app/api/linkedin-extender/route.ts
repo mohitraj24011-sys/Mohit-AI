@@ -5,7 +5,7 @@ import { checkLimit, incrementUsage, trackEvent } from '@/lib/plans'
 import { ROLE_TIERS } from '@/lib/role-tiers'
 import { getPersonalization, buildPersonalizedSystemPrompt } from '@/lib/personalization'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
     const { allowed, remaining, plan } = await checkLimit(userId, 'linkedin_extender')
     if (!allowed) return NextResponse.json({ error: 'Daily limit reached', upgradeUrl: '/pricing' }, { status: 429 })
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const { action, targetPerson, myProfile, conversationHistory, tier, replyText } = await req.json()
     const tierData = ROLE_TIERS[(tier as keyof typeof ROLE_TIERS)] || ROLE_TIERS.mid
     const mem = await getPersonalization(userId)

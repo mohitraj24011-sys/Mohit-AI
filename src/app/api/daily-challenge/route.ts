@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 import { getPersonalization } from '@/lib/personalization'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 const db = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 export async function GET(req: NextRequest) {
@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
       .eq('id', userId)
       .single()
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
@@ -114,8 +115,9 @@ export async function POST(req: NextRequest) {
     await db().rpc('add_xp', { p_user_id: userId, p_xp: xpGain })
 
     // Award streak achievement if applicable
-    const { data: p } = await db().from('profiles').select('streak_days').eq('id', userId).single()
-    const streak = p?.streak_days || 0
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+    const { data: profile } = await db().from('profiles').select('*').eq('id', userId).single()
+    const streak = profile?.streak_days || 0
     if (streak === 7)   await db().from('achievements').insert({ user_id: userId, achievement: 'streak_7', category: 'streak', xp_earned: 200, badge_icon: '🔥', description: '7-day streak' }).catch(() => {})
     if (streak === 30)  await db().from('achievements').insert({ user_id: userId, achievement: 'streak_30', category: 'streak', xp_earned: 750, badge_icon: '🌟', description: '30-day streak' }).catch(() => {})
 

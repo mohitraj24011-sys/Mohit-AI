@@ -4,7 +4,7 @@ import { getUserId } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
 import { trackEvent } from '@/lib/plans'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'dummy_key_for_build' })
+
 
 const db = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
   try {
     const userId = await getUserId(req)
     if (!userId) return NextResponse.json({ error: 'Sign in required' }, { status: 401 })
+
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
     const {
       winType, company, role, description,
